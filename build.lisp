@@ -1,0 +1,5 @@
+(log-title "Building system ...")
+(ql:quickload :asdf)
+(ql:quickload :woo)
+(ql:quickload :postmodern)
+(log-footer "end building")
