@@ -1,1 +1,1 @@
-web: webserver 
+web: sbcl --script web-launcher.lisp
