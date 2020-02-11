@@ -1,4 +1,5 @@
 (log-title "Building system ...")
+(load "vendor/bundle.lisp")
 (ql:quickload :asdf)
 (ql:quickload :woo)
 (ql:quickload :postmodern)
