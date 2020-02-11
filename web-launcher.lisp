@@ -1,5 +1,5 @@
-(load "root/vendor/bundle.lisp")
 (load "root/quicklisp/setup.lisp")
+(load "vendor/bundle.lisp")
 (require :asdf)
 (asdf:disable-output-translations)
 (defvar *port* (parse-integer (asdf::getenv "PORT")))
