@@ -1,3 +1,4 @@
+(load "root/vendor/bundle.lisp")
 (load "root/quicklisp/setup.lisp")
 (require :asdf)
 (asdf:disable-output-translations)
