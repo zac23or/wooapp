@@ -1,0 +1,11 @@
+(defpackage :app
+  (:use cl)
+  (:export :register)
+  )
+(in-package :app)
+(defun defaultresponse ()
+  '(200 (:content-type "text/plain") ("Hello, World teste altered"))
+  )
+(defun register(fn) 
+  (funcall fn "/teste" 'defaultresponse)
+)
