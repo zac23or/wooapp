@@ -5,20 +5,25 @@
 (defpackage :main
   (:use cl)
   (:export :main)
-  (:export :registeraction)
   )
 (in-package :main)
-(defparameter *actions* '())
-(defun registeraction(key fn) 
-  (setq *actions* (append *actions* (list (intern key) fn)))  
-  )
 (defun main ()
   (load "app.lisp")
-  (funcall (find-symbol (string '#:register) (find-package :app)) 'registeraction)
+  (handler-case
+    (defparameter *action* (find-symbol (string '#:response) (find-package :app)))
+    (error (c) 
+       (print c)
+    )
+  )
   (woo:run
     (lambda (env)
-      (funcall (getf *actions* (intern (getf env :path-info))))
-      )
+      (handler-case
+        (funcall *action* env)
+        (error (c) 
+           `(400 (:content-type "text/plain") (,c) )
+           )
+       )
+    )
     :port (parse-integer (asdf::getenv "PORT"))
     :address "0.0.0.0"                      
     )
