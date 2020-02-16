@@ -2,6 +2,9 @@
 (require :asdf)
 (require :woo)
 (require :postmodern)
+(require :cl-json)
+(require :cl-redis)
+(require :cl+ssl)
 (defpackage :main
   (:use cl)
   (:export :main)
@@ -20,6 +23,7 @@
       (handler-case
         (funcall *action* env)
         (error (c) 
+            (print c)   
            `(400 (:content-type "text/plain") (,c) )
            )
        )
