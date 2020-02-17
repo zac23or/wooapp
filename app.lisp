@@ -3,11 +3,10 @@
   (:use asdf)
   (:use quri)
   (:use cl-json)
+  (:use cl+ssl)
   (:use postmodern)
   (:export :response)
   )
-(ql:quickload :cl+ssl)
-(ql:quickload :alexandria)
 (in-package :app)
 (defvar *STUDENT_SQL* "SELECT \
  id, name, grade, classroom, balance, birthday,\
@@ -36,7 +35,7 @@
   `(200 (:content-type "text/plain") (,(json:encode-json-to-string(query *STUDENT_SQL* (pageSize env) (page env)))))
   )
 
-(setq cl+sll::*make-ssl-client-stream-verify-default* nil)
+(setq *make-ssl-client-stream-verify-default* nil)
 (let ((uri (uri (asdf::getenv "DATABASE_URL"))))
   (let ((db (subseq (uri-path uri) 1)) (port (uri-port uri)) (dbuser (car(asdf::split-string (uri-userinfo uri) :max 2 :separator ":"))) 
                                        (dbpassword (car (last (asdf::split-string (uri-userinfo uri) :max 2 :separator ":")))) (host (uri-host uri)))
