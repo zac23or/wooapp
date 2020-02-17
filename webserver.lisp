@@ -5,6 +5,7 @@
 (require :cl-json)
 (require :cl-redis)
 (require :cl+ssl)
+(ql:quickload :alexandria)
 (defpackage :main
   (:use cl)
   (:export :main)
