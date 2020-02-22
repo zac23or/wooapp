@@ -5,7 +5,7 @@
 (require :cl-json)
 (require :cl-redis)
 (require :cl+ssl)
-(ql:quickload :alexandria)
+(require :monkeylib-bcrypt)
 (defpackage :main
   (:use cl)
   (:export :main)
