@@ -8,7 +8,13 @@
   (:export :studentsresponse)
   )
 (in-package :students)
-(redis:connect :host "localhost")
+(defvar *REDIS_URI* (uri (asdf::getenv "REDIS_URL")))
+(defvar *REDIS_USER* (car(asdf::split-string (uri-userinfo *REDIS_URI*) :max 2 :separator ":")))
+(defvar *REDIS_PWD* (car (last (asdf::split-string (uri-userinfo *REDIS_URI*) :max 2 :separator ":"))))
+(defvar *REDIS_HOST* (uri-host *REDIS_URI*))
+(defvar *REDIS_PORT* (uri-port *REDIS_URI*))
+(redis:connect :host *REDIS_HOST* :port *REDIS_PORT*)
+(red:auth *REDIS_PWD*)
 (defvar *STUDENT_SQL* "SELECT \
  id, name, grade, classroom, balance, birthday,\
  does_not_use_password_on_terminal, gender, login, negative_limit, pdv, post_paid, registration_number, restricted_stores,\
