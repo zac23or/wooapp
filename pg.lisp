@@ -14,6 +14,7 @@
 (defvar *DATABASE_PORT* (uri-port *DATABASE_URL*))
 (defvar *DATABASE_USER* (car(asdf::split-string (uri-userinfo *DATABASE_URL*) :max 2 :separator ":")))
 (defvar *DATABASE_PASSWORD* (car (last (asdf::split-string (uri-userinfo *DATABASE_URL*) :max 2 :separator ":"))))
+
 (defun pgresponse()
   (let ((now (get-internal-real-time)) (text "") )
     (with-connection `(,*DATABASE_NAME* ,*DATABASE_USER* ,*DATABASE_PASSWORD* ,*DATABASE_HOST*  ,:port ,*DATABASE_PORT* ,:use-ssl ,:yes))
