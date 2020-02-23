@@ -18,15 +18,15 @@
  \"last_active_card\":{\"id\":5462,\"number\":\"T15S5386\",\"track2\":\";00747550=076160170529108005386?\n\"},\"login\":null,\
  \"negative_limit\":\"0.0\",\"pdv\":false,\"post_paid\":false,\"registration_number\":\"00006002\",\"restricted_stores\":[],\"restrictions\":[],              \"terminal_password\":\"1234\",\"imported\":true,\"most_consumed_products_ids\":[],\"activated_at\":\"2015-10-15T00:00:00.000-03:00\"}");
 (defvar *DICTS* *DICT*)
-(dotimes (number 30) 
+(dotimes (number 30)
   (setq *DICTS* (concatenate 'string *DICTS* "," *DICT*))
-)
+  )
 (setq *DICTS* (concatenate 'string "[" *DICTS* "]"))
 (setq *DICT* (json:decode-json-from-string *DICTS*))
 (defun jsnresponse()
   (let ((now (get-internal-real-time))(text "") )
     (encode-json-to-string *DICTS*)
-    (setq text (write-to-string (- (get-internal-real-time) now))) 
+    (setq text (write-to-string (- (get-internal-real-time) now)))
     `(200 (:content-type "text/html") (,text))
     )
   )

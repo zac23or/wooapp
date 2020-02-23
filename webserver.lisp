@@ -14,22 +14,22 @@
 (defun main ()
   (load "app.lisp")
   (handler-case
-    (defparameter *action* (find-symbol (string '#:response) (find-package :app)))
-    (error (c) 
-       (print c)
+      (defparameter *action* (find-symbol (string '#:response) (find-package :app)))
+    (error (c)
+	   (print c)
+	   )
     )
-  )
   (woo:run
-    (lambda (env)
-      (handler-case
-        (funcall *action* env)
-        (error (c) 
-            (print c)   
-           `(400 (:content-type "text/plain") (,c) )
-           )
+   (lambda (env)
+     (handler-case
+	 (funcall *action* env)
+       (error (c)
+	      (print c)
+	      `(400 (:content-type "text/plain") (,c) )
+	      )
        )
-    )
-    :port (parse-integer (asdf::getenv "PORT"))
-    :address "0.0.0.0"                      
-    )
+     )
+   :port (parse-integer (asdf::getenv "PORT"))
+   :address "0.0.0.0"
+   )
   )
