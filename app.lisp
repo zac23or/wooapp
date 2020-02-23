@@ -68,7 +68,7 @@
 (defun response (env)
   (let ((path (getf env :path-info)) (result nil))
     (cond ((equal path "/students")
-           (setq result (studentsresponse (page env) (pageSize env) (redis env)))
+           (setq result (students::studentsresponse (page env) (pageSize env) (redis env)))
            )
 ((equal path "/pg")
            (setq result (pgresponse))
