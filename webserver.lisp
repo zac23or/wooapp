@@ -20,16 +20,17 @@
 	   )
     )
   (woo:run
-   (lambda (env)
-     (handler-case
-	 (funcall *action* env)
-       (error (c)
-	      (print c)
-	      `(400 (:content-type "text/plain") (,c) )
-	      )
-       )
-     )
-   :port (parse-integer (asdf::getenv "PORT"))
+    (lambda (env)
+      (handler-case
+        (funcall *action* env)
+        (error (c)
+               (print c)
+               `(400 (:content-type "text/plain") (,c) )
+               )
+        )
+      )
+   :port (parse-integer (or (asdf::getenv "PORT") "5555"))
    :address "0.0.0.0"
+   :worker-num (parse-integer (or (asdf::getenv "worker-num") "10"))
    )
   )

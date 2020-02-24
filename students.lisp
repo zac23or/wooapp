@@ -8,6 +8,9 @@
   (:export :studentsresponse)
   )
 (in-package :students)
+(unless (asdf::getenv "REDIS_URL")
+  (error " variavel de ambiente REDIS_URL não encontrada")
+)
 (defvar *REDIS_URI* (uri (asdf::getenv "REDIS_URL")))
 (defvar *REDIS_USER* (car(asdf::split-string (uri-userinfo *REDIS_URI*) :max 2 :separator ":")))
 (defvar *REDIS_PWD* (car (last (asdf::split-string (uri-userinfo *REDIS_URI*) :max 2 :separator ":"))))
@@ -21,6 +24,9 @@
  terminal_password,\
  imported, most_consumed_products_ids,activated_at  FROM students order by id limit $1 offset 1 * $2")
 
+(unless (asdf::getenv "DATABASE_URL")
+  (error " variavel de ambiente DATABASE_URL não encontrada")
+)
 (setq *make-ssl-client-stream-verify-default* nil)
 (defvar *DATABASE_URL* (uri (asdf::getenv "DATABASE_URL")))
 (defvar *DATABASE_HOST* (uri-host *DATABASE_URL*))
@@ -39,7 +45,6 @@
                        (unless st
                          (setq st (json:encode-json-to-string(query *STUDENT_SQL* pageSize page :alists)))
                          )
-                       (print st)
                        (if useredis
                          (red:set cacheident st)
                          )
