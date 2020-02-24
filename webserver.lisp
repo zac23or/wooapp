@@ -32,5 +32,6 @@
    :port (parse-integer (or (asdf::getenv "PORT") "5555"))
    :address "0.0.0.0"
    :worker-num (parse-integer (or (asdf::getenv "worker-num") "10"))
+   :backlog(parse-integer (or (asdf::getenv "backlog") "128"))
    )
   )
