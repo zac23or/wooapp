@@ -16,8 +16,6 @@
 (defvar *REDIS_PWD* (car (last (asdf::split-string (uri-userinfo *REDIS_URI*) :max 2 :separator ":"))))
 (defvar *REDIS_HOST* (uri-host *REDIS_URI*))
 (defvar *REDIS_PORT* (uri-port *REDIS_URI*))
-(redis:connect :host *REDIS_HOST* :port *REDIS_PORT*)
-(red:auth *REDIS_PWD*)
 (defvar *STUDENT_SQL* "SELECT \
  id, name, grade, classroom, balance, birthday,\
  does_not_use_password_on_terminal, gender, login, negative_limit, pdv, post_paid, registration_number, restricted_stores,\
@@ -35,20 +33,32 @@
 (defvar *DATABASE_USER* (car(asdf::split-string (uri-userinfo *DATABASE_URL*) :max 2 :separator ":")))
 (defvar *DATABASE_PASSWORD* (car (last (asdf::split-string (uri-userinfo *DATABASE_URL*) :max 2 :separator ":"))))
 
-(defun studentsresponse(page pageSize useredis)
-    (with-connection `(,*DATABASE_NAME* ,*DATABASE_USER* ,*DATABASE_PASSWORD* ,*DATABASE_HOST*  ,:port ,*DATABASE_PORT* ,:use-ssl ,:yes)
-                     (let ((st nil) (cacheident nil))
-                       (setq cacheident (format nil "students-~D-~D" page pageSize))
-                       (if useredis
-                         (setq st (red:get cacheident))
+(defun responsewithredis(page pageSize)
+  (redis:with-connection (:host *REDIS_HOST* :port *REDIS_PORT*)
+                         (red:auth *REDIS_PWD*)
+                         (with-connection `(,*DATABASE_NAME* ,*DATABASE_USER* ,*DATABASE_PASSWORD* ,*DATABASE_HOST*  ,:port ,*DATABASE_PORT* ,:use-ssl ,:yes)
+                                          (let ((st nil) (cacheident nil))
+                                            (setq cacheident (format nil "students-~D-~D" page pageSize))
+                                            (setq st (red:get cacheident))
+
+                                            (unless st
+                                              (setq st (json:encode-json-to-string(query *STUDENT_SQL* pageSize page :alists)))
+                                              )
+                                            (red:set cacheident st)
+                                            `(200 (:content-type "application/json") (,st))
+                                            )
+                                          )
                          )
-                       (unless st
-                         (setq st (json:encode-json-to-string(query *STUDENT_SQL* pageSize page :alists)))
-                         )
-                       (if useredis
-                         (red:set cacheident st)
-                         )
-                       `(200 (:content-type "application/json") (,st))
-                       )
+  )
+(defun responsewithoutredis(page pageSize)
+  (with-connection `(,*DATABASE_NAME* ,*DATABASE_USER* ,*DATABASE_PASSWORD* ,*DATABASE_HOST*  ,:port ,*DATABASE_PORT* ,:use-ssl ,:yes)
+                   `(200 (:content-type "application/json") (,(json:encode-json-to-string(query *STUDENT_SQL* pageSize page :alists)))
                      )
+                   )
+  )
+(defun studentsresponse(page pageSize useredis)
+  (if useredis
+    (responsewithredis page pageSize)
+    (responsewithoutredis page pageSize)
     )
+  )
