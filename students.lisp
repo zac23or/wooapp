@@ -4,7 +4,7 @@
   (:use cl+ssl)
   (:use postmodern)
   (:local-nicknames (:rc :redis))
-  (:use cl-json)
+  (:use :jonathan)
   (:export :studentsresponse)
   )
 (in-package :students)
@@ -42,7 +42,7 @@
                                             (setq st (red:get cacheident))
 
                                             (unless st
-                                              (setq st (json:encode-json-to-string(query *STUDENT_SQL* pageSize page :alists)))
+                                              (setq st (jonathan:to-json (query *STUDENT_SQL* pageSize page :alists) :from :alist))
                                               )
                                             (red:set cacheident st)
                                             `(200 (:content-type "application/json") (,st))
@@ -52,7 +52,7 @@
   )
 (defun responsewithoutredis(page pageSize)
   (with-connection `(,*DATABASE_NAME* ,*DATABASE_USER* ,*DATABASE_PASSWORD* ,*DATABASE_HOST*  ,:port ,*DATABASE_PORT* ,:use-ssl ,:yes)
-                   `(200 (:content-type "application/json") (,(json:encode-json-to-string(query *STUDENT_SQL* pageSize page :alists)))
+                   `(200 (:content-type "application/json") (,(jonathan:to-json (query *STUDENT_SQL* pageSize page :alists) :from :alist))
 			 )
                    )
   )

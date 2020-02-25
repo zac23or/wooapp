@@ -1,7 +1,6 @@
 (defpackage :rd
   (:use cl)
   (:local-nicknames (:rds :redis))
-  (:use cl-json)
   (:use quri)
   (:export :rdresponse)
   )

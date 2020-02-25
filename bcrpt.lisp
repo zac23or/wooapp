@@ -2,7 +2,6 @@
 (defpackage :bcrpt
   (:use cl)
   (:local-nicknames (:rds :redis))
-  (:use cl-json)
   (:use bcrypt)
   (:export :bcrptresponse)
   )

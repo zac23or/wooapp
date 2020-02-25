@@ -2,7 +2,7 @@
 (require :asdf)
 (require :woo)
 (require :postmodern)
-(require :cl-json)
+(require :jonathan)
 (require :cl-redis)
 (require :cl+ssl)
 (require :monkeylib-bcrypt)

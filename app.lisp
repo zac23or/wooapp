@@ -7,7 +7,6 @@
   (:use cl)
   (:use asdf)
   (:use quri)
-  (:use cl-json)
   (:use cl+ssl)
   (:use postmodern)
   (:use students)
