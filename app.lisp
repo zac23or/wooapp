@@ -46,12 +46,12 @@
         (t (loop for a in l appending (flatten a)))))
 (defun getf-string-equal (plist indicator)
   (loop
-     for (i v) on plist by #'cddr
-     when (string-equal i indicator)
-     return v))
+   for (i v) on plist by #'cddr
+   when (string-equal i indicator)
+   return v))
 (defun querystringparam(querystring param)
   (let ((params (asdf::split-string querystring :max 1000 :separator "&")))
-   (getf-string-equal (mapcar #'string (flatten (mapcar #'(lambda(item) (asdf::split-string item :max 1000 :separator "="))params))) param) 
+    (getf-string-equal (mapcar #'string (flatten (mapcar #'(lambda(item) (asdf::split-string item :max 1000 :separator "="))params))) param)
     )
   )
 
@@ -70,7 +70,7 @@
     (cond ((equal path "/students")
            (setq result (students::studentsresponse (page env) (pageSize env) (redis env)))
            )
-((equal path "/pg")
+	  ((equal path "/pg")
            (setq result (pgresponse))
            )
           ((equal path "/json")
@@ -87,7 +87,7 @@
            )
           )
     (unless result
-      (setq result `(200 (:content-type "text/html") (,*html*))) 
+      (setq result `(200 (:content-type "text/html") (,*html*)))
       )
     result)
   )
